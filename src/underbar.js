@@ -96,10 +96,30 @@
   _.reject = function(collection, test) {
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
+    var rejected = [];
+    _.filter(collection, function(item){
+      if(!(test(item))) {
+        rejected.push(item);
+        return false;
+      } else {
+        return true;
+      }
+    });
+    return rejected;
   };
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
+    var seen = [];
+    var no_dupli = _.filter(array, function(item){
+      if(item in seen) {
+        return false;
+      } else {
+        seen.push(item);
+        return true;
+      }
+    });
+    return seen;
   };
 
 

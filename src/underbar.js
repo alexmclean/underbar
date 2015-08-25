@@ -111,11 +111,11 @@
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
     var seen = [];
-    var no_dupli = _.filter(array, function(item){
-      if(item in seen) {
+    var no_dupli = _.filter(_.identity(array), function(item){
+      if(_.identity(item) in seen) {
         return false;
       } else {
-        seen.push(item);
+        seen.push(_.identity(item));
         return true;
       }
     });
@@ -174,6 +174,19 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
+    var result;
+    if(arguments.length === 2){
+      result = collection[0];
+      _.each(collection.slice(1,collection.length), function(x){
+        result = iterator(result, x);
+      });
+    } else {
+      result = accumulator;
+      _.each(collection, function(x){
+        result = iterator(result, x);
+      });
+    }
+    return result;
   };
 
   // Determine if the array or object contains a given value (using `===`).

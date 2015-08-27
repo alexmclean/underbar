@@ -110,16 +110,26 @@
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
-    var seen = [];
-    var no_dupli = _.filter(_.identity(array), function(item){
-      if(_.identity(item) in seen) {
-        return false;
-      } else {
-        seen.push(_.identity(item));
-        return true;
+    var uniqueTracker = [];
+    /*var test = function() {
+      return arguments[2] == null ? _.identity : arguments[2];
+    }(); */
+    if(arguments[1]){
+      uniqueTracker.push(array[0]);
+      for(var i = 1; i < array.length; i = arguments[2](i)){
+        if(array[i] > array[i-1]){
+          uniqueTracker.push(array[i]);
+        }
+      }
+      return uniqueTracker;
+    }
+
+    _.each(array, function(x){
+      if(!(x in uniqueTracker)){
+        uniqueTracker.push(x);
       }
     });
-    return seen;
+    return uniqueTracker;
   };
 
 
@@ -205,6 +215,15 @@
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
+    var test = function() {
+      return iterator == null ? _.identity : iterator;
+    }();
+    return _.reduce(collection, function(startVal, value){
+      if(test(value) && startVal) {
+        return true;
+      }
+      return false;
+    }, true);
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
@@ -233,6 +252,12 @@
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
+  /*  _.each(arguments.slice(1, arguments.length), function(otherObj){
+      _.each(otherObj, function(attribute){
+        obj[attribute] = otherObj[attribute];
+      });
+    });*/
+    return obj;
   };
 
   // Like extend, but doesn't ever overwrite a key that already

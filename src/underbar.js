@@ -230,6 +230,12 @@
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
+    var test = function() {
+      return iterator == null ? _.identity : iterator;
+    }();
+    return !(_.every(collection, function(x){
+      return !(test(x));
+    }));
   };
 
 
@@ -257,6 +263,11 @@
         obj[attribute] = otherObj[attribute];
       });
     });*/
+    for(var otherObj = 1; otherObj < arguments.length; otherObj++) {
+      for(var attr in arguments[otherObj]) {
+        obj[attr] = arguments[otherObj][attr];
+      }
+    }
     return obj;
   };
 

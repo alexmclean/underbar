@@ -326,11 +326,13 @@
   // instead if possible.
   _.memoize = function(func) {
     var storage = {};
-    return function(){
-      if(!_.contains(storage,arguments)){
-        storage[arguments] = func.apply(this, arguments);
-      } 
-      return storage[arguments];
+
+    return function() {
+      var argsSet = Array.prototype.slice.call(arguments, 0);
+      if (!storage[argsSet]) {
+        storage[argsSet] = func.apply(this, arguments);
+      }
+      return storage[argsSet];
     };
   };
 
@@ -359,14 +361,15 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
-     var randomArray = array.slice(0,array.length);
-     for(var i = 0; i < array.length; i++){
-      var randomIndex = Math.floor(Math.random() * randomArray.length);
-      var toSwap = randomArray[i];
-      randomArray[i] = randomArray[randomIndex];
-      randomArray[randomIndex] = toSwap;
+    //not a biased shuffle anymore
+     var shuffled = [];
+     var preShuffleArray = array.slice(0,array.length);
+     while(preShuffleArray.length > 0){
+      var randomIndex = Math.floor(Math.random() * preShuffleArray.length);
+      shuffled.push(preShuffleArray[randomIndex]);
+      preShuffleArray.splice(randomIndex,1);
      }
-     return randomArray;
+     return shuffled;
   };
 
 
